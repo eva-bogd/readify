@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ book.name }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="book-details">
+        <div class="book-item">
+          <h2>Автор:</h2>
+          <p>{{ book.author }}</p>
+        </div>
+        <div class="book-item">
+          <h2>Жанр:</h2>
+          <p>{{ book.genre.name }}</p>
+        </div>
+        <div class="book-item">
+          <h2>Описание:</h2>
+          <p>{{ book.description }}</p>
+        </div>
+        <div class="book-item">
+          <h2>Год выпуска:</h2>
+          <p>{{ book.year }}</p>
+        </div>
+        <div class="book-item">
+          <h2>Рейтинг:</h2>
+          <p>{{ book.rating }}</p>
+        </div>
+        <div class="book-item">
+          <h2>Отзывы:</h2>
+          {% for review in book.reviews.all %}
+            <p>{{ review.author }}: {{ review.comment }}</p>
+          {% empty %}
+            <p>Отзывов нет</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 text-center">
+      <div class="book-cover-container">
+        {% if book.cover %}
+          <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
+        {% else %}
+          <p>Обложка отсутствует</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

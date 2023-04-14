@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Книги
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      <div class="col-md-12 text-center">
+        <h1>Книги</h1>
+      </div>
+  </div>
+  {% include 'book_list.html' %}
+  {% include 'paginator.html' %}
+{% endblock %}

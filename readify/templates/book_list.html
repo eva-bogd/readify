@@ -1,0 +1,24 @@
+<div class="book-list">
+    {% for book in page_obj %}
+      <div class="book-item">
+        <h2>{{ book.name }}</h2>
+        <b>Автор: </b> {{ book.author }}
+          <a href="{% url 'books:author' book.author.id %}">Все книги автора</a>
+        <br>
+        <b>Жанр: </b> {{ book.genre }}
+            <a href="{% url 'books:books_genre' book.genre.slug %}">Все книги жанра</a>
+        <br>
+        <b>Рейтинг: </b> {{ book.rating }}
+        <div class="book-cover-container">
+          {% if book.cover %}
+            <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
+          {% else %}
+            <p>Обложка отсутствует</p>
+          {% endif %}
+        </div>
+          <h3><a href="{% url 'books:books_detail' book.id %}">Подробнее</a></h3>
+      </div>
+    {% empty %}
+      <p>Нет доступных книг</p>
+    {% endfor %}
+  </div>
