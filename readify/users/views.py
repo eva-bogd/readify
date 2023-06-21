@@ -41,7 +41,7 @@ def profile(request, username):
             instance=user)
         if profile_form.is_valid():
             profile_form.save()
-            messages.success(request, "Профиль был успешно обновлён!")
+            # messages.success(request, "Профиль был успешно обновлён!")
             return redirect('users:profile', username=user.username)
     else:
         user = get_object_or_404(User, username=username)
