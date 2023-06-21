@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Прочитанные книги
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      <div class="col-md-12 text-center">
+        <h1>Прочитанные книги</h1>
+        {% for book_list in page_obj %}
+        {% include 'book_list.html' %}
+        {% empty %}
+            Нет прочитанных книг
+        {% endfor %}
+      </div>
+  </div>
+  {% include 'paginator.html' %}
+{% endblock %}

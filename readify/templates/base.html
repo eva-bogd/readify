@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 
 {% load static %}
@@ -11,9 +10,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="{% static 'crispy_forms/css/crispy-forms.css' %}"> -->
 
     <title>{% block title %}{% endblock %}</title>
   </head>
+
   <body>
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FAF0E6;"> <!-- Linen(бежевый) -->
@@ -33,6 +34,34 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'books:search_books' %}">Поиск</a>
             </li>
+
+            <!-- For authenticated users -->
+
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link {% if view_name  == 'users:profile' %}active{% endif %}"
+                  href="{% url 'users:profile' username=user.username %}">Профиль </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link link-light {% if view_name  == 'users:logout' %}active{% endif %}"
+                  href="{% url 'users:logout' %}">Выйти</a>
+            </li>
+          <li>
+            Пользователь: {{ user.username }}
+          </li>
+
+          <!-- For unauthorized users -->
+
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link link-light {% if view_name  == 'users:login' %}active{% endif %}"
+              href="{% url 'users:login' %}">Войти</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link-light {% if view_name  == 'users:signup' %}active{% endif %}"
+            href="{% url 'users:signup' %}">Регистрация</a>
+          </li>
+          {% endif %}
           </ul>
         </div>
       </div>
@@ -40,7 +69,8 @@
 
     <div class="container">
       <h1 class="mt-4">{% block heading %}{% endblock %}</h1>
-      {% block content %}{% endblock %}
+      {% block content %}
+      {% endblock %}
     </div>
 
     <!-- Optional JavaScript -->

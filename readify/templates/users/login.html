@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Вход
+{% endblock %}
+
+{% block content %}
+  <h1>Войти на сайт</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit">Войти</button>
+  </form>
+  <a href="{% url 'users:password_reset'%}">Забыли пароль?</a>
+{% endblock %}
