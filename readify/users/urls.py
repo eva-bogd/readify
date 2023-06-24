@@ -15,10 +15,6 @@ app_name = 'users'
 urlpatterns = [
     # страница профиля пользователя
     path('profile/<str:username>', views.profile, name='profile'),
-    # страница с прочитанными книгами
-    path('bookread', views.bookread, name='bookread'),
-    # страница со списком запланированных книг
-    path('booktoread', views.booktoread, name='booktoread'),
     # страница регистрации
     path('signup/', views.SignUp.as_view(), name='signup'),
     # страница входа

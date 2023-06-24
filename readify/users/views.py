@@ -8,16 +8,10 @@ from django.contrib import messages
 
 from django.contrib.auth import get_user_model
 
-from django.contrib.auth import update_session_auth_hash
-
-from books.models import Book, BookRead, BookToRead
-from core.utils import get_paginator
-from .forms import CreationForm, ProfileUpdateForm, PasswordChangingForm
+from .forms import CreationForm, ProfileUpdateForm
 
 # from django.conf import settings
 # from django.core.mail import send_mail
-
-from django.http import HttpResponse
 
 
 User = get_user_model()
@@ -52,23 +46,6 @@ def profile(request, username):
     }
     return render(request, 'users/profile.html', context)
 
-
-@login_required
-def bookread(request):
-    book_list = Book.objects.filter(books_read__user=request.user)
-    context = {
-        'page_obj': get_paginator(request, book_list)
-    }
-    return render(request, 'users/bookread.html', context)
-
-
-@login_required
-def booktoread(request):
-    book_list = Book.objects.filter(books_to_read__user=request.user)
-    context = {
-         'page_obj': get_paginator(request, book_list)
-    }
-    return render(request, 'users/booktoread.html', context)
 
 # send_mail(
 #            'Восстановление пароля',

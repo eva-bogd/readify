@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'books.apps.BooksConfig',
     'users.apps.UsersConfig',
     'core.apps.CoreConfig',
@@ -40,7 +41,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+# for debug_toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 
 ROOT_URLCONF = 'readify.urls'
 
