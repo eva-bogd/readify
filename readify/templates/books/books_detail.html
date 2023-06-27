@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load book_filters %}
+
 {% block title %}
   {{ book.name }}
 {% endblock %}
@@ -36,13 +38,42 @@
             <p>Отзывов нет</p>
           {% endfor %}
         </div>
+
+        <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
+        {% if request.user.is_authenticated %}
+          {% if book|is_book_read_by_user:request.user %}
+            <form method="POST" action="{% url 'books:remove_book_read' book_id=book.id %}">
+              {% csrf_token %}
+              <button type="submit">Удалить из прочитанных</button>
+            </form>
+          {% else %}
+            <form method="POST" action="{% url 'books:add_book_read' book_id=book.id %}">
+              {% csrf_token %}
+              <button type="submit">Добавить в прочитанные</button>
+              <input type="hidden" name="book_id" value="{{ book.id }}">
+            </form>
+          {% endif %}
+          {% if book|is_book_to_read_by_user:request.user %}
+            <form method="POST" action="{% url 'books:remove_book_to_read' book_id=book.id %}">
+              {% csrf_token %}
+              <button type="submit">Удалить из запланированных</button>
+            </form>
+          {% else %}
+            <form method="POST" action="{% url 'books:add_book_to_read' book_id=book.id %}">
+              {% csrf_token %}
+              <button type="submit">Добавить в запланированные</button>
+              <input type="hidden" name="book_id" value="{{ book.id }}">
+            </form>
+          {% endif %}
+        {% endif %}
+
       </div>
     </div>
     <div class="col-md-6 text-center">
       <div class="book-cover-container">
         {% if book.cover %}
           <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
-        {% else %}
+          {% else %}
           <p>Обложка отсутствует</p>
         {% endif %}
       </div>
