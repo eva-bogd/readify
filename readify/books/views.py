@@ -25,6 +25,26 @@ def books(request):
     return render(request, 'books/books.html', context)
 
 
+def books_genre(request, slug):
+    genre = get_object_or_404(Genre, slug=slug)
+    book_list = genre.books.all()
+    context = {
+        'genre': genre,
+        'page_obj': get_paginator(request, book_list)
+    }
+    return render(request, 'books/books_genre.html', context)
+
+
+def author(request, author_id):
+    author = get_object_or_404(Author, id=author_id)
+    author_list = author.books.all()
+    context = {
+        'author': author,
+        'page_obj': get_paginator(request, author_list)
+    }
+    return render(request, 'books/author.html', context)
+
+
 def books_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     review_form = ReviewForm()
@@ -122,26 +142,6 @@ def edit_comment(request, book_id, review_id, comment_id):
         'comment_form': comment_form,
     }
     return render(request, 'books/edit_comment.html', context)
-
-
-def books_genre(request, slug):
-    genre = get_object_or_404(Genre, slug=slug)
-    book_list = genre.books.all()
-    context = {
-        'genre': genre,
-        'page_obj': get_paginator(request, book_list)
-    }
-    return render(request, 'books/books_genre.html', context)
-
-
-def author(request, author_id):
-    author = get_object_or_404(Author, id=author_id)
-    author_list = author.books.all()
-    context = {
-        'author': author,
-        'page_obj': get_paginator(request, author_list)
-    }
-    return render(request, 'books/author.html', context)
 
 
 # Прочитанные книги
