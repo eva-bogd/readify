@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 from core.utils import get_paginator
 
 from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
+from .forms import ReviewForm, CommentForm
 
 User = get_user_model()
 
@@ -17,17 +20,108 @@ def home(request):
 def books(request):
     book_list = Book.objects.all()
     context = {
-        'page_obj': get_paginator(request, book_list),
+        'page_obj': get_paginator(request, book_list)
     }
     return render(request, 'books/books.html', context)
 
 
 def books_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
+    review_form = ReviewForm()
+    reviews = book.reviews.all()
+    comments = Comment.objects.filter(review__in=reviews)
     context = {
         'book': book,
+        'review_form': review_form,
+        'reviews': reviews,
+        'comments': comments
     }
     return render(request, 'books/books_detail.html', context)
+
+
+@login_required
+def add_review(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    review_form = ReviewForm(request.POST or None)
+    if review_form.is_valid():
+        review = review_form.save(commit=False)
+        review.book = book
+        review.author = request.user
+        try:
+            review.save()
+            return redirect('books:books_detail', book_id=book_id)
+        except IntegrityError:
+            messages.error(request, "Вы уже оставили отзыв на эту книгу.")
+    # else:
+    #     messages.error(request, "Неверный формат отзыва.")
+    #     review_form.add_error(None, "Ошибка добавления отзыва")
+    return redirect('books:books_detail', book_id=book_id)
+
+
+@login_required
+def edit_review(request, book_id, review_id):
+    review = get_object_or_404(
+        Review,
+        id=review_id,  # author=request.user)
+        book_id=book_id)
+    if request.user != review.author:
+        return redirect('books:books_detail', book_id=book_id)
+    review_form = ReviewForm(request.POST or None, instance=review)
+    if review_form.is_valid():
+        review = review_form.save()
+        return redirect('books:books_detail', book_id=book_id)
+    context = {
+        'book_id': book_id,
+        'review_id': review_id,
+        'review_form': review_form,
+    }
+    return render(request, 'books/edit_review.html', context)
+
+
+@login_required
+def add_comment(request, book_id, review_id):
+    review = get_object_or_404(
+        Review,
+        id=review_id,
+        book_id=book_id)
+    comment_form = CommentForm(request.POST or None)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.author = request.user
+        comment.review = review
+        comment.save()
+        return redirect('books:books_detail', book_id=book_id)
+    context = {
+        'book_id': book_id,
+        'review_id': review_id,
+        'comment_form': comment_form,
+    }
+    return render(request, 'books/add_comment.html', context)
+
+
+@login_required
+def edit_comment(request, book_id, review_id, comment_id):
+    review = get_object_or_404(
+        Review,
+        id=review_id,
+        book_id=book_id)
+    comment = get_object_or_404(
+        Comment,
+        id=comment_id,  # author=request.user)
+        review=review)
+    if request.user != comment.author:
+        return redirect('books:books_detail', book_id=book_id)
+    comment_form = CommentForm(request.POST or None, instance=comment)
+    if comment_form.is_valid():
+        comment.save()
+        return redirect('books:books_detail', book_id=book_id)
+    context = {
+        'book_id': book_id,
+        'review_id': review_id,
+        'comment_id': comment_id,
+        'comment_form': comment_form,
+    }
+    return render(request, 'books/edit_comment.html', context)
 
 
 def books_genre(request, slug):
@@ -55,7 +149,7 @@ def author(request, author_id):
 def book_read(request):
     book_list = Book.objects.filter(books_read__user=request.user)
     context = {
-        'page_obj': get_paginator(request, book_list),
+        'page_obj': get_paginator(request, book_list)
     }
     return render(request, 'books/book_read.html', context)
 

@@ -32,7 +32,8 @@ def profile(request, username):
         profile_form = ProfileUpdateForm(
             request.POST,
             request.FILES,
-            instance=user)
+            instance=user)  # поля будут автоматически заполнены значениями
+                            # из переданного объекта user
         if profile_form.is_valid():
             profile_form.save()
             # messages.success(request, "Профиль был успешно обновлён!")

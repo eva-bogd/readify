@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Добавить комментарий
+{% endblock %}
+
+{% block content %}
+  <h1>Добавить комментарий</h1>
+  <form method="post" action={% url 'books:add_comment' book_id review_id %}>
+    {% csrf_token %}
+    {{ comment_form|crispy }}
+    <button type="submit">Сохранить</button>
+  </form>
+{% endblock %}

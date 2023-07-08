@@ -98,7 +98,7 @@ class Review(models.Model):
         blank=True,
         null=True)
     score = models.PositiveSmallIntegerField(
-        verbose_name='Оценка',
+        verbose_name='Оценка (от 1 до 10)',
         validators=[MinValueValidator(1), MaxValueValidator(10)],
         blank=False)
     added_date = models.DateTimeField(
@@ -130,7 +130,7 @@ class Comment(models.Model):
         auto_now_add=True)
 
     class Meta:
-        ordering = ('-added_date',)
+        ordering = ('added_date',)
 
     def __str__(self):
         return self.text

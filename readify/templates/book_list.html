@@ -3,7 +3,7 @@
 <div class="book-list">
   {% for book in page_obj %}
     <div class="book-item">
-      <h2>{{ book.name }}</h2>
+      <h2><a href="{% url 'books:books_detail' book_id=book.id %}">{{ book.name }}</a></h2>
       <b>Автор: </b> {{ book.author }}
         <a href="{% url 'books:author' book.author.id %}">Все книги автора</a>
       <br>
@@ -18,8 +18,10 @@
           <p>Обложка отсутствует</p>
         {% endif %}
       </div>
-        <h3><a href="{% url 'books:books_detail' book.id %}">Подробнее</a></h3>
+        <!-- <h3><a href="{% url 'books:books_detail' book.id %}">Подробнее</a></h3> -->
+      <br>
 
+        <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
         {% if request.user.is_authenticated %}
 
           {% if book|is_book_read_by_user:request.user %}
