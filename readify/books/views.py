@@ -63,6 +63,8 @@ def books_detail(request, book_id):
 def add_review(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     review_form = ReviewForm(request.POST or None)
+    reviews = book.reviews.all()
+    comments = Comment.objects.filter(review__in=reviews)
     if review_form.is_valid():
         review = review_form.save(commit=False)
         review.book = book
@@ -72,10 +74,17 @@ def add_review(request, book_id):
             return redirect('books:books_detail', book_id=book_id)
         except IntegrityError:
             messages.error(request, "Вы уже оставили отзыв на эту книгу.")
+    context = {
+        'book': book,
+        'review_form': review_form,
+        'reviews': reviews,
+        'comments': comments
+    }
     # else:
     #     messages.error(request, "Неверный формат отзыва.")
     #     review_form.add_error(None, "Ошибка добавления отзыва")
-    return redirect('books:books_detail', book_id=book_id)
+    # return redirect('books:books_detail', book_id=book_id)
+    return render(request, 'books/books_detail.html', context)
 
 
 @login_required

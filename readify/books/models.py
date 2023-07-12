@@ -104,6 +104,9 @@ class Review(models.Model):
     added_date = models.DateTimeField(
         verbose_name='Дата добавления отзыва',
         auto_now_add=True)
+    edited_date = models.DateTimeField(
+        verbose_name='Дата редактирования отзыва',
+        auto_now=True)
 
     class Meta:
         unique_together = ['author', 'book']
@@ -128,6 +131,9 @@ class Comment(models.Model):
     added_date = models.DateTimeField(
         verbose_name='Дата добавления комментария',
         auto_now_add=True)
+    edited_date = models.DateTimeField(
+        verbose_name='Дата редактирования комментария',
+        auto_now=True)
 
     class Meta:
         ordering = ('added_date',)

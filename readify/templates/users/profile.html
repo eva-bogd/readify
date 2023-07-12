@@ -18,14 +18,17 @@
     <p>Пол: {{ user.get_gender_display }}</p>
   </div>
 
-  <h4>Обновить профиль</h4>
-  <form method="post" enctype="multipart/form-data" class="crispy-forms">
-    {% csrf_token %}
-    {{ profile_update_form|crispy }}
-    <button type="submit">Сохранить</button>
-  </form>
-  <a href="{% url 'users:password_change'%}">Изменить пароль?</a>
+  {% if user == request.user%}
+    <h4>Обновить профиль</h4>
+    <form method="post" action={% url 'users:update_profile' user.username %}>
+      {% csrf_token %}
+      {{ profile_update_form|crispy }}
+      <button type="submit">Сохранить</button>
+    </form>
+    <a href="{% url 'users:password_change'%}">Изменить пароль?</a>
 
-  {% include 'users/profile_sidebar.html' %}
+    {% include 'users/profile_sidebar.html' %}
+
+  {% endif %}
 
 {% endblock %}

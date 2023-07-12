@@ -28,21 +28,26 @@
           <h2>Год выпуска:</h2>
           <p>{{ book.year }}</p>
         </div>
-        <!--
+
+        <!-- Рейтинг -->
         <div class="book-item">
           <h2>Рейтинг:</h2>
           <p>{{ book.rating }}</p>
         </div>
-         -->
+
         <div class="book-item">
           <h2>Отзывы:</h2>
           {% for review in reviews %}
             <p>
-              <span style="color: red;">{{ review.author.username }}:</span>
+              <!--<span style="color: red;">{{ review.author.username }}:</span>-->
+              <a href="{% url 'users:profile' review.author.username %}">{{ review.author.username }}</a>
               оценка <b>{{ review.score }}</b>
             </p>
             <p>{{ review.text }}</p>
             <p>{{ review.added_date|date:"d.m.Y" }}</p>
+            {% if review.added_date != review.edited_date %}
+              <p><i>отредактировано {{ review.edited_date|date:"d.m.Y H:i" }} </i></p>
+            {% endif %}
             {% if review.author == request.user %}
               <p>
                 <a href="{% url 'books:edit_review' book.id review.id %}">Редактировать отзыв</a>
@@ -58,15 +63,18 @@
             <h5>Комментарии:</h5>
             {% for comment in comments %}
             <p>
-              <span style="color: red;">{{ comment.author.username }}:</span>
+              <a href="{% url 'users:profile' comment.author.username %}">{{ comment.author.username }}</a>
             </p>
             <p>{{ comment.text }}</p>
             <p>{{ comment.added_date|date:"d.m.Y" }}</p>
-              {% if comment.author == request.user %}
-                <p>
-                  <a href="{% url 'books:edit_comment' book.id review.id comment.id %}"> Редактировать комментарий </a>
-                </p>
-              {% endif %}
+            {% if comment.added_date != comment.edited_date %}
+              <p><i>отредактировано {{ comment.edited_date|date:"d.m.Y H:i" }} </i></p>
+            {% endif %}
+            {% if comment.author == request.user %}
+              <p>
+                <a href="{% url 'books:edit_comment' book.id review.id comment.id %}"> Редактировать комментарий </a>
+              </p>
+            {% endif %}
             {% empty %}
               <p> Комментариев нет </p>
             {% endfor %}
@@ -85,17 +93,11 @@
               <button type="submit">Сохранить</button>
             </form>
             {% if messages %}
-              <ul class="messages">
-                {% for message in messages %}
-                  <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    {% if message.tags == 'error' %}
-                      <span style="color: red;">{{ message }}</span>
-                    {% else %}
-                      {{ message }}
-                    {% endif %}
-              </p>
-                {% endfor %}
-              </ul>
+              {% for message in messages %}
+                {% if message.tags == 'error' %}
+                  <span style="color: red;">{{ message }}</span>
+                {% endif %}
+              {% endfor %}
             {% endif %}
           {% endif %}
         </div>

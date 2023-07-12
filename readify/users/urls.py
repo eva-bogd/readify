@@ -15,6 +15,9 @@ app_name = 'users'
 urlpatterns = [
     # страница профиля пользователя
     path('profile/<str:username>', views.profile, name='profile'),
+    # для редактирования профиля
+    path('profile/<str:username>/update', views.update_profile,
+         name='update_profile'),
     # страница регистрации
     path('signup/', views.SignUp.as_view(), name='signup'),
     # страница входа
