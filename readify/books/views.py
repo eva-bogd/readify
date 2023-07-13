@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
@@ -8,7 +9,7 @@ from django.contrib import messages
 from core.utils import get_paginator
 
 from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
-from .forms import ReviewForm, CommentForm
+from .forms import ReviewForm, CommentForm, SearchForm
 
 User = get_user_model()
 
@@ -208,4 +209,18 @@ def remove_book_to_read(request, book_id):
 
 
 def search_books(request):
-    return HttpResponse('Поиск книг')
+    search_query = request.GET.get('query', '')
+    book_list = []
+    if search_query:
+        book_list = Book.objects.filter(
+            Q(name__icontains=search_query) |
+            Q(author__name__icontains=search_query) |
+            Q(genre__name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    search_form = SearchForm(request.GET or None)
+    context = {
+        'book_list': book_list,
+        'search_form': search_form,
+    }
+    return render(request, 'books/search_books.html', context)

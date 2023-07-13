@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Поиск книг
+{% endblock %}
+
+{% block content %}
+  <div class="col-md-12 text-center">
+    <h1>Поиск книг</h1>
+  </div>
+
+  <div>
+    <form method="get" action="{% url 'books:search_books' %}">
+        {% csrf_token %}
+        {{ search_form|crispy }}
+        <button type="submit">Искать</button>
+    </form>
+  </div>
+
+  {% if book_list %}
+    <h2>Результаты поиска:</h2>
+    <ul>
+      {% for book in book_list %}
+        <li><a href="{% url 'books:books_detail' book_id=book.id %}">{{ book.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% comment %} {% else %} {% endcomment %}
+  {% if book_list|length == 0 and request.GET.query %}
+    <p>Ничего не найдено.</p>
+  {% endif %}
+
+{% endblock %}

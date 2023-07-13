@@ -40,6 +40,9 @@
           {% for review in reviews %}
             <p>
               <!--<span style="color: red;">{{ review.author.username }}:</span>-->
+              {% if review.author.avatar %}
+                <img src="{{ review.author.avatar.url }}" class="avatar-image">
+              {% endif %}
               <a href="{% url 'users:profile' review.author.username %}">{{ review.author.username }}</a>
               оценка <b>{{ review.score }}</b>
             </p>
@@ -58,11 +61,14 @@
                 <a href="{% url 'books:add_comment' book.id review.id %}"> Добавить комментарий </a>
               </p>
             {% endif %}
-            ---------------------
+            ----------------------------
 
             <h5>Комментарии:</h5>
             {% for comment in comments %}
             <p>
+              {% if comment.author.avatar %}
+                <img src="{{ comment.author.avatar.url }}" class="avatar-image">
+              {% endif %}
               <a href="{% url 'users:profile' comment.author.username %}">{{ comment.author.username }}</a>
             </p>
             <p>{{ comment.text }}</p>
