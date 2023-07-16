@@ -84,8 +84,7 @@ class Review(models.Model):
         verbose_name='Книга',
         # отзыв удалится при удалении книги:
         on_delete=models.CASCADE,
-        related_name='reviews'
-    )
+        related_name='reviews')
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -147,14 +146,12 @@ class BookRead(models.Model):
         Book,
         verbose_name='Книга',
         on_delete=models.CASCADE,
-        related_name='books_read'
-    )
+        related_name='books_read')
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='books_read'
-    )
+        related_name='books_read')
     added_date = models.DateTimeField(
         verbose_name='Дата добавления',
         auto_now_add=True)
@@ -172,14 +169,12 @@ class BookToRead(models.Model):
         Book,
         verbose_name='Книга',
         on_delete=models.CASCADE,
-        related_name='books_to_read'
-    )
+        related_name='books_to_read')
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='books_to_read'
-    )
+        related_name='books_to_read')
     added_date = models.DateTimeField(
         verbose_name='Дата добавления',
         auto_now_add=True)
@@ -190,3 +185,26 @@ class BookToRead(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.book.name}'
+
+
+# class Recommendation(models.Model):
+#     book = models.ForeignKey(
+#         Book,
+#         verbose='Книга',
+#         on_delete=models.CASCADE,
+#         related_name='recommendations')
+#     user = models.ForeignKey(
+#         User,
+#         verbose_name='Пользователь',
+#         on_delete=models.CASCADE,
+#         related_name='recommendations')
+#     added_date = models.DateTimeField(
+#         verbose_name='Дата добавления',
+#         auto_now_add=True)
+
+#     class Meta:
+#         unique_together = ['user', 'book']
+#         ordering = ('added_date',)
+
+#     def __str__(self):
+#         return f'{self.user.username} - {self.book.name}'

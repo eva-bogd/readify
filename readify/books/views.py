@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
@@ -209,18 +209,46 @@ def remove_book_to_read(request, book_id):
 
 
 def search_books(request):
-    search_query = request.GET.get('query', '')
+    # '' - пустая строка дефолтое значение
+    search_query = request.GET.get('search', '')
     book_list = []
-    if search_query:
-        book_list = Book.objects.filter(
-            Q(name__icontains=search_query) |
-            Q(author__name__icontains=search_query) |
-            Q(genre__name__icontains=search_query) |
-            Q(description__icontains=search_query)
-        )
+    if search_query: # если пустое значение возвращается false
+        keywords = search_query.split()
+        query = Q()
+        for keyword in keywords:
+            query |= (  # для объединения условий
+                      Q(name__icontains=keyword) |
+                      Q(author__name__icontains=keyword) |
+                      Q(genre__name__icontains=keyword) |
+                      Q(description__icontains=keyword)
+                )
+        book_list = Book.objects.filter(query)
+        # book_list = Book.objects.filter(
+        #     Q(name__icontains=search_query) |
+        #     Q(author__name__icontains=search_query) |
+        #     Q(genre__name__icontains=search_query) |
+        #     Q(description__icontains=search_query)
+        # )
     search_form = SearchForm(request.GET or None)
     context = {
         'book_list': book_list,
         'search_form': search_form,
     }
     return render(request, 'books/search_books.html', context)
+
+
+def get_recommendations(request):
+    user = request.user
+    books_read = BookRead.objects.filter(user=user).values_list('book', flat=True)
+    books_to_read = BookToRead.objects.filter(user=user).values_list('book', flat=True)
+    genres = Book.objects.filter(id__in=books_read).values_list('genre', flat=True).distinct()
+    authors = Book.objects.filter(id__in=books_read).values_list('author', flat=True).distinct()
+    books = Book.objects.exclude(id__in=books_read).exclude(id__in=books_to_read)
+    # books_with_rating = Book.objects.annotate(rating=Avg('reviews__score')).filter(rating__gte=6)
+    genre_recommendations = books.filter(genre__in=genres)
+    author_recommendations = books.filter(author__in=authors)
+    book_list = genre_recommendations & author_recommendations
+    context = {
+        'page_obj': get_paginator(request, book_list),
+    }
+    return render(request, 'books/recommendations.html', context)

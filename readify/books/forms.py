@@ -16,4 +16,4 @@ class CommentForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    query = forms.CharField(label='Введите поисковый запрос', max_length=150)
+    search = forms.CharField(label='Введите поисковый запрос', max_length=150)

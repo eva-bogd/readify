@@ -46,6 +46,10 @@ urlpatterns = [
     path('books/<int:book_id>/remove_book_to_read/', views.remove_book_to_read,
          name='remove_book_to_read'),
 
+    # рекомендации
+    path('recommendations', views.get_recommendations,
+         name='recommendations'),
     # поиск по книгам
     path('search_books/', views.search_books, name='search_books'),
+
 ]
