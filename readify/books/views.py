@@ -49,13 +49,11 @@ def author(request, author_id):
 def books_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     review_form = ReviewForm()
-    reviews = book.reviews.all()
-    comments = Comment.objects.filter(review__in=reviews)
+    reviews = book.reviews.all().prefetch_related('comments')
     context = {
         'book': book,
         'review_form': review_form,
         'reviews': reviews,
-        'comments': comments
     }
     return render(request, 'books/books_detail.html', context)
 
@@ -64,8 +62,6 @@ def books_detail(request, book_id):
 def add_review(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     review_form = ReviewForm(request.POST or None)
-    reviews = book.reviews.all()
-    comments = Comment.objects.filter(review__in=reviews)
     if review_form.is_valid():
         review = review_form.save(commit=False)
         review.book = book
@@ -75,11 +71,11 @@ def add_review(request, book_id):
             return redirect('books:books_detail', book_id=book_id)
         except IntegrityError:
             messages.error(request, "Вы уже оставили отзыв на эту книгу.")
+    reviews = book.reviews.all().prefetch_related('comments')
     context = {
         'book': book,
         'review_form': review_form,
         'reviews': reviews,
-        'comments': comments
     }
     # else:
     #     messages.error(request, "Неверный формат отзыва.")
@@ -239,11 +235,16 @@ def search_books(request):
 
 def get_recommendations(request):
     user = request.user
-    books_read = BookRead.objects.filter(user=user).values_list('book', flat=True)
-    books_to_read = BookToRead.objects.filter(user=user).values_list('book', flat=True)
-    genres = Book.objects.filter(id__in=books_read).values_list('genre', flat=True).distinct()
-    authors = Book.objects.filter(id__in=books_read).values_list('author', flat=True).distinct()
-    books = Book.objects.exclude(id__in=books_read).exclude(id__in=books_to_read)
+    books_read = BookRead.objects.filter(
+        user=user).values_list('book', flat=True)
+    books_to_read = BookToRead.objects.filter(
+        user=user).values_list('book', flat=True)
+    genres = Book.objects.filter(
+        id__in=books_read).values_list('genre', flat=True).distinct()
+    authors = Book.objects.filter(
+        id__in=books_read).values_list('author', flat=True).distinct()
+    books = Book.objects.exclude(
+        id__in=books_read).exclude(id__in=books_to_read)
     # books_with_rating = Book.objects.annotate(rating=Avg('reviews__score')).filter(rating__gte=6)
     genre_recommendations = books.filter(genre__in=genres)
     author_recommendations = books.filter(author__in=authors)

@@ -11,32 +11,69 @@
 {% block content %}
   <div class="row">
     <div class="col-md-6">
+      <div class="book-cover-container">
+        {% if book.cover %}
+          <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
+        {% else %}
+          <p>Обложка отсутствует</p>
+        {% endif %}
+      </div>
+
+      <br>
+      <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
+      {% if request.user.is_authenticated %}
+        {% if book|is_book_read_by_user:request.user %}
+          <form method="POST" action="{% url 'books:remove_book_read' book_id=book.id %}">
+            {% csrf_token %}
+            <button type="submit">Удалить из прочитанных</button>
+          </form>
+        {% else %}
+          <form method="POST" action="{% url 'books:add_book_read' book_id=book.id %}">
+            {% csrf_token %}
+            <button type="submit">Добавить в прочитанные</button>
+            <input type="hidden" name="book_id" value="{{ book.id }}">
+          </form>
+        {% endif %}
+        {% if book|is_book_to_read_by_user:request.user %}
+          <form method="POST" action="{% url 'books:remove_book_to_read' book_id=book.id %}">
+            {% csrf_token %}
+            <button type="submit">Удалить из запланированных</button>
+          </form>
+        {% else %}
+          <form method="POST" action="{% url 'books:add_book_to_read' book_id=book.id %}">
+            {% csrf_token %}
+            <button type="submit">Добавить в запланированные</button>
+            <input type="hidden" name="book_id" value="{{ book.id }}">
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
       <div class="book-details">
         <div class="book-item">
-          <h2>Автор:</h2>
-          <p>{{ book.author }}</p>
+          <h2>{{ book.name }}</h2>
+        <div class="book-item">
+          <b>Автор: </b> <a href="{% url 'books:author' book.author.id %}">{{ book.author }}</a>
         </div>
         <div class="book-item">
-          <h2>Жанр:</h2>
-          <p>{{ book.genre.name }}</p>
+          <b>Жанр: </b><a href="{% url 'books:books_genre' book.genre.slug%}">{{ book.genre.name }}</a>
         </div>
         <div class="book-item">
-          <h2>Описание:</h2>
+          <b>Описание:</b>
           <p>{{ book.description }}</p>
         </div>
         <div class="book-item">
-          <h2>Год выпуска:</h2>
-          <p>{{ book.year }}</p>
+          <b>Год выпуска:</b> {{ book.year }}
         </div>
 
         <!-- Рейтинг -->
         <div class="book-item">
-          <h2>Рейтинг:</h2>
-          <p>{{ book.rating }}</p>
+          <b>Рейтинг: {{ book.rating }}</b>
         </div>
 
         <div class="book-item">
-          <h2>Отзывы:</h2>
+          <h3>Отзывы:</h3>
           {% for review in reviews %}
             <p>
               <!--<span style="color: red;">{{ review.author.username }}:</span>-->
@@ -64,7 +101,7 @@
             ----------------------------
 
             <h5>Комментарии:</h5>
-            {% for comment in comments %}
+            {% for comment in review.comments.all %}
             <p>
               {% if comment.author.avatar %}
                 <img src="{{ comment.author.avatar.url }}" class="avatar-image">
@@ -107,44 +144,6 @@
             {% endif %}
           {% endif %}
         </div>
-
-        <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
-        {% if request.user.is_authenticated %}
-          {% if book|is_book_read_by_user:request.user %}
-            <form method="POST" action="{% url 'books:remove_book_read' book_id=book.id %}">
-              {% csrf_token %}
-              <button type="submit">Удалить из прочитанных</button>
-            </form>
-          {% else %}
-            <form method="POST" action="{% url 'books:add_book_read' book_id=book.id %}">
-              {% csrf_token %}
-              <button type="submit">Добавить в прочитанные</button>
-              <input type="hidden" name="book_id" value="{{ book.id }}">
-            </form>
-          {% endif %}
-          {% if book|is_book_to_read_by_user:request.user %}
-            <form method="POST" action="{% url 'books:remove_book_to_read' book_id=book.id %}">
-              {% csrf_token %}
-              <button type="submit">Удалить из запланированных</button>
-            </form>
-          {% else %}
-            <form method="POST" action="{% url 'books:add_book_to_read' book_id=book.id %}">
-              {% csrf_token %}
-              <button type="submit">Добавить в запланированные</button>
-              <input type="hidden" name="book_id" value="{{ book.id }}">
-            </form>
-          {% endif %}
-        {% endif %}
-
-      </div>
-    </div>
-    <div class="col-md-6 text-center">
-      <div class="book-cover-container">
-        {% if book.cover %}
-          <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
-          {% else %}
-          <p>Обложка отсутствует</p>
-        {% endif %}
       </div>
     </div>
   </div>

@@ -67,9 +67,9 @@ class Book(models.Model):
         rating = (Review.objects.filter(book=self).
                   aggregate(Avg('score')).get('score__avg'))
         if rating is None:
-            return None
+            return 'отсутствует'
         else:
-            return round(rating)
+            return rating
 
     class Meta:
         ordering = ('-added_date',)
