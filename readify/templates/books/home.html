@@ -8,9 +8,20 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12 text-center">
-        <h1>Добро пожаловать на сайт!</h1>
-        <p>Тут будет контент.</p>
+        {% if request.user.is_authenticated %}
+          <h1>Добро пожаловать на сайт, {{request.user.username}}!</h1>
+        {% else %}
+          <h1>Добро пожаловать на сайт!</h1>
+          <p>Для получения дополнительных возможностей
+            <a href="{% url 'users:login' %}">войдите в учётную запись</a>
+            или
+            <a href="{% url 'users:signup' %}">зарегистрируйтесь</a>.
+          <p/>
+        {% endif %}
+        <h2><i>Последние обновления на сайте:</i></h2>
       </div>
     </div>
   </div>
+  {% include 'book_list.html' %}
+  {% include 'paginator.html' %}
 {% endblock %}

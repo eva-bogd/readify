@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 
 
-amount = 10
+amount = 6
 
 
 def get_paginator(request, book_list):

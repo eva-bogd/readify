@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 
+from urllib.parse import quote_plus
+
 from core.utils import get_paginator
 
 from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
@@ -15,7 +17,11 @@ User = get_user_model()
 
 
 def home(request):
-    return render(request, 'books/home.html')
+    book_list = Book.objects.all().order_by('-added_date')[:11]
+    context = {
+        'page_obj': get_paginator(request, book_list)
+    }
+    return render(request, 'books/home.html', context)
 
 
 def books(request):
@@ -50,10 +56,14 @@ def books_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     review_form = ReviewForm()
     reviews = book.reviews.all().prefetch_related('comments')
+    # для URL-кодирования строки
+    search_query = quote_plus(book.name)  # заменяет пробелы на '+'
+    search_url = f"https://www.litres.ru/search/?q={search_query}"
     context = {
         'book': book,
         'review_form': review_form,
         'reviews': reviews,
+        'search_url': search_url
     }
     return render(request, 'books/books_detail.html', context)
 

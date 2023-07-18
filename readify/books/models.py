@@ -72,7 +72,7 @@ class Book(models.Model):
             return rating
 
     class Meta:
-        ordering = ('-added_date',)
+        ordering = ('added_date',)
 
     def __str__(self):
         return self.name
