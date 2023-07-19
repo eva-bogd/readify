@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Обратная связь
+{% endblock %}
+
+{% block content %}
+  <h1>Обратная связь</h1>
+  <p>Приветики!</p>
+  <p>Если Вы нашли ошибку, или у Вас есть пожелания и рекомендации по улучшению сайта, напишите мне, пожалуйста, используя форму обратной связи.</p>
+    <form method="post" action={% url 'books:feedback' %}>
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type="submit">Отправить</button>
+  </form>
+{% endblock %}

@@ -6,12 +6,18 @@ from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 
+
+from django.conf import settings
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+
 from urllib.parse import quote_plus
+
 
 from core.utils import get_paginator
 
 from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
-from .forms import ReviewForm, CommentForm, SearchForm
+from .forms import ReviewForm, CommentForm, SearchForm, FeedbackForm
 
 User = get_user_model()
 
@@ -243,7 +249,7 @@ def search_books(request):
     return render(request, 'books/search_books.html', context)
 
 
-def get_recommendations(request):
+def recommendations(request):
     user = request.user
     books_read = BookRead.objects.filter(
         user=user).values_list('book', flat=True)
@@ -263,3 +269,39 @@ def get_recommendations(request):
         'page_obj': get_paginator(request, book_list),
     }
     return render(request, 'books/recommendations.html', context)
+
+
+def feedback(request):
+    form = FeedbackForm(request.POST or None)
+    if form.is_valid():
+        send_feedback(
+            form.cleaned_data['name'],
+            form.cleaned_data['email'],
+            form.cleaned_data['message'])
+        return redirect('books:feedback_was_sent')
+    context = {
+        'form': form
+    }
+    return render(request, 'books/feedback.html', context)
+
+
+def send_feedback(name, email, message):
+    text = get_template('message.html')
+    html = get_template('message.html')
+    context = {
+        'name': name,
+        'email': email,
+        'message': message
+    }
+    subject = 'Обратная связь'
+    from_email = settings.EMAIL_HOST_USER
+    text_content = text.render(context)
+    html_content = html.render(context)
+    msg = EmailMultiAlternatives(
+        subject, text_content, from_email, [settings.EMAIL_HOST_USER])
+    msg.attach_alternative(html_content, 'text/html')
+    msg.send()
+
+
+def feedback_was_sent(request):
+    return render(request, 'books/feedback_was_sent.html')

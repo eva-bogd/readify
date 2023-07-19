@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+  Сообщение успешно отправлено
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h2>
+      <p>Сообщение успешно отправлено!</p>
+      <p>Спасибо за обратную связь ^_^</p>
+    </h2>
+    <img class="img-resize" src="{% static 'images/kote.jpg' %}" alt="Спасибо за обратную связь ^_^">
+  </div>
+</div>
+{% endblock %}

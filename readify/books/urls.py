@@ -47,9 +47,13 @@ urlpatterns = [
          name='remove_book_to_read'),
 
     # рекомендации
-    path('recommendations', views.get_recommendations,
+    path('recommendations', views.recommendations,
          name='recommendations'),
     # поиск по книгам
     path('search_books/', views.search_books, name='search_books'),
-
+    # обратная связь
+    path('feedback/', views.feedback, name='feedback'),
+    # для уведомления об успешной отправке фидбэка
+    path('feedback_was_sent/', views.feedback_was_sent,
+         name='feedback_was_sent'),
 ]

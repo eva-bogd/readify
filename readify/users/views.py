@@ -6,14 +6,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
-# from django.contrib import messages
 
 from django.contrib.auth import get_user_model
 
 from .forms import CreationForm, ProfileUpdateForm
-
-# from django.conf import settings
-# from django.core.mail import send_mail
 
 
 User = get_user_model()
@@ -55,11 +51,3 @@ def update_profile(request, username):
         'profile_update_form': profile_form,
     }
     return render(request, 'users/profile.html', context)
-
-# send_mail(
-#            'Восстановление пароля',
-#            'Пожалуйста, перейдите по ссылке, чтобы сбросить ваш пароль',
-#            settings.DEFAULT_FROM_EMAIL,
-#            ['to@example.com'],
-#            fail_silently=False,
-#         )

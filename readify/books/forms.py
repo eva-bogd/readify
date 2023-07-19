@@ -16,4 +16,10 @@ class CommentForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    search = forms.CharField(label='Введите поисковый запрос', max_length=150)
+    search = forms.CharField(label='Введите поисковый запрос', max_length=50)
+
+
+class FeedbackForm(forms.Form):
+    name = forms.CharField(label='Имя', max_length=50)
+    email = forms.EmailField(label='E-mail')
+    message = forms.CharField(label='Сообщение', widget=forms.Textarea)

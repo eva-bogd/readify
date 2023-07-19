@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -153,17 +156,21 @@ LOGIN_REDIRECT_URL = 'books:home'
 
 AUTH_USER_MODEL = 'users.User'
 
+# E-mail
 
-#  подключаем движок filebased.EmailBackend
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# указываем директорию, в которую будут складываться файлы писем
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+# #  подключаем движок filebased.EmailBackend
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# # указываем директорию, в которую будут складываться файлы писем
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
-# # Settings SMTP
-# DEFAULT_FROM_EMAIL = 'eva.pass.reset@gmail.com'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'eva.pass.reset@gmail.com'
-# EMAIL_HOST_PASSWORD = 'EMAIL_HOST_PASSWORD'
+# Settings SMTP
+# DEFAULT_FROM_EMAIL = ''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+# EMAIL_HOST_USER = 'eva.postss@gmail.com'
+# EMAIL_HOST_PASSWORD = 'hexjcaghyljoahso'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
