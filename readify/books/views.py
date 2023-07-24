@@ -23,7 +23,7 @@ User = get_user_model()
 
 
 def home(request):
-    book_list = Book.objects.all().order_by('-added_date')[:11]
+    book_list = Book.objects.all().order_by('-added_date')[:10]
     context = {
         'page_obj': get_paginator(request, book_list)
     }

@@ -3,17 +3,19 @@
 <div class="book-list">
   {% for book in page_obj %}
     <div class="book-item">
-      <h3><a href="{% url 'books:books_detail' book_id=book.id %}">{{ book.name }}</a></h3>
+      <h4><a href="{% url 'books:books_detail' book_id=book.id %}">{{ book.name }}</a></h4>
       <b>Автор: </b> {{ book.author }}
-        <a href="{% url 'books:author' book.author.id %}">Все книги автора</a>
+      <br>
+      <a href="{% url 'books:author' book.author.id %}">Все книги автора</a>
       <br>
       <b>Жанр: </b> {{ book.genre }}
-          <a href="{% url 'books:books_genre' book.genre.slug %}">Все книги жанра</a>
+      <br>
+      <a href="{% url 'books:books_genre' book.genre.slug %}">Все книги жанра</a>
       <br>
       <b>Рейтинг: </b> {{ book.rating }}
       <div class="book-cover-container">
         {% if book.cover %}
-          <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover">
+          <img src="{{ book.cover.url }}" alt="Обложка книги {{ book.name }}" class="book-cover-list">
         {% else %}
           <p>Обложка отсутствует</p>
         {% endif %}
