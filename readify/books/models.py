@@ -36,13 +36,13 @@ class Book(models.Model):
         verbose_name='Автор',
         on_delete=models.CASCADE,
         related_name='books')
-    genre = models.ForeignKey(
+    genre = models.ManyToManyField(
         Genre,
         verbose_name='Жанр',
-        null=True,
-        # книги останутся в БД при удалении жанра:
-        on_delete=models.SET_NULL,
+        blank=True,
         related_name='books')
+        # книги останутся в БД при удалении жанра:
+        # on_delete=models.SET_NULL,
     year = models.SmallIntegerField(
         verbose_name='Год издания',
         validators=[

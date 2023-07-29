@@ -4,13 +4,13 @@
   {% for book in page_obj %}
     <div class="book-item">
       <h4><a href="{% url 'books:books_detail' book_id=book.id %}">{{ book.name }}</a></h4>
-      <b>Автор: </b> {{ book.author }}
+      <b>Автор: </b>
+      <a href="{% url 'books:author' book.author.id %}">{{ book.author }}</a>
       <br>
-      <a href="{% url 'books:author' book.author.id %}">Все книги автора</a>
-      <br>
-      <b>Жанр: </b> {{ book.genre }}
-      <br>
-      <a href="{% url 'books:books_genre' book.genre.slug %}">Все книги жанра</a>
+      <b>Жанр: </b>
+        {% for genre in book.genre.all %}
+          <a href="{% url 'books:books_genre' genre.slug %}">{{ genre }} </a>
+        {% endfor %}
       <br>
       <b>Рейтинг: </b> {{ book.rating }}
       <div class="book-cover-container">
@@ -20,7 +20,6 @@
           <p>Обложка отсутствует</p>
         {% endif %}
       </div>
-        <!-- <h3><a href="{% url 'books:books_detail' book.id %}">Подробнее</a></h3> -->
       <br>
 
         <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
