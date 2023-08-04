@@ -9,7 +9,11 @@
       <br>
       <b>Жанр: </b>
         {% for genre in book.genre.all %}
-          <a href="{% url 'books:books_genre' genre.slug %}">{{ genre }} </a>
+          {% if forloop.last %}
+            <a href="{% url 'books:books_genre' genre.slug %}">{{ genre }}</a></li>
+          {% else %}
+            <a href="{% url 'books:books_genre' genre.slug %}">{{ genre }}</a>,</li>
+          {% endif %}
         {% endfor %}
       <br>
       <b>Рейтинг: </b> {{ book.rating }}

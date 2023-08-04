@@ -1,5 +1,7 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -23,15 +25,18 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',  # for registration and authorization of users
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'djoser',
     'debug_toolbar',
     'books.apps.BooksConfig',
     'users.apps.UsersConfig',
     'core.apps.CoreConfig',
+    'api.apps.ApiConfig',
     'sorl.thumbnail',  # for images
     'crispy_forms',  # for nice forms
 ]
@@ -47,7 +52,8 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-# for debug_toolbar
+# For debug_toolbar
+
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
@@ -155,6 +161,42 @@ LOGIN_REDIRECT_URL = 'books:home'
 # Auth customization
 
 AUTH_USER_MODEL = 'users.User'
+
+
+# JWT Token Authentication
+# https://djoser.readthedocs.io/en/latest/getting_started.html
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+DJOSER = {
+    'HIDE_USERS': False,
+    'SERIALIZERS': {
+        'user': 'api.serializers.CustomUserSerializer',
+        'current_user': 'api.serializers.CustomUserSerializer',
+        'user_create': 'api.serializers.CustomUserCreateSerializer'
+    },
+    'VIEW_SET': 'api.views.CustomUserViewSet',
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    },
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=14),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 
 # E-mail
 

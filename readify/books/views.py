@@ -234,7 +234,7 @@ def search_books(request):
                       Q(genre__name__icontains=keyword) |
                       Q(description__icontains=keyword)
                 )
-        book_list = Book.objects.filter(query)
+        book_list = Book.objects.filter(query).distinct()
         # book_list = Book.objects.filter(
         #     Q(name__icontains=search_query) |
         #     Q(author__name__icontains=search_query) |

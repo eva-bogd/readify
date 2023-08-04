@@ -16,7 +16,13 @@ class CommentForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    search = forms.CharField(label='Введите поисковый запрос', max_length=50)
+    search = forms.CharField(label='Введите поисковый запрос',
+                             help_text=('Для выполнения поиска введите \
+                                        ключевые слова из названия книги,\
+                                        из её описания, или автора книги,\
+                                        либо жанр книг (для отображения всех \
+                                        книг выбранного жанра)'),
+                             max_length=50)
 
 
 class FeedbackForm(forms.Form):
