@@ -17,6 +17,7 @@ from urllib.parse import quote_plus
 from core.utils import get_paginator
 
 from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
+from .services import BookRecommendationService
 from .forms import ReviewForm, CommentForm, SearchForm, FeedbackForm
 
 User = get_user_model()
@@ -48,7 +49,7 @@ def books_genre(request, slug):
     return render(request, 'books/books_genre.html', context)
 
 
-def author(request, author_id):
+def book_author(request, author_id):
     author = get_object_or_404(Author, id=author_id)
     author_list = author.books.all()
     context = {
@@ -225,6 +226,16 @@ def remove_book_to_read(request, book_id):
     get_object_or_404(BookToRead, user=user, book=book).delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
+def recommendations(request):
+    user = request.user
+    book_list = BookRecommendationService.get_recommendations_for_user(
+            user_id=user.id)
+    context = {
+        'page_obj': get_paginator(request, book_list),
+    }
+    return render(request, 'books/recommendations.html', context)
+
 
 def search_books(request):
     # '' - пустая строка дефолтое значение
@@ -253,28 +264,6 @@ def search_books(request):
         'search_form': search_form,
     }
     return render(request, 'books/search_books.html', context)
-
-
-def recommendations(request):
-    user = request.user
-    books_read = BookRead.objects.filter(
-        user=user).values_list('book', flat=True)
-    books_to_read = BookToRead.objects.filter(
-        user=user).values_list('book', flat=True)
-    genres = Book.objects.filter(
-        id__in=books_read).values_list('genre', flat=True).distinct()
-    authors = Book.objects.filter(
-        id__in=books_read).values_list('author', flat=True).distinct()
-    books = Book.objects.exclude(
-        id__in=books_read).exclude(id__in=books_to_read)
-    # books_with_rating = Book.objects.annotate(rating=Avg('reviews__score')).filter(rating__gte=6)
-    genre_recommendations = books.filter(genre__in=genres)
-    author_recommendations = books.filter(author__in=authors)
-    book_list = genre_recommendations & author_recommendations
-    context = {
-        'page_obj': get_paginator(request, book_list),
-    }
-    return render(request, 'books/recommendations.html', context)
 
 
 def feedback(request):

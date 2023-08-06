@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.models import User
 from books.models import (Genre, Author, Book, Review, Comment,
                           BookRead, BookToRead)
+from books.services import BookRecommendationService
 from .serializers import (CustomUserSerializer, GenreSerializer,
                           AuthorSerializer, BookSerializer, BookListSerializer,
                           BookReadSerializer, BookToReadSerializer)
@@ -43,6 +44,17 @@ class UserBookListViewSet(viewsets.ViewSet):
                             status=status.HTTP_403_FORBIDDEN)
         queryset = BookToRead.objects.filter(user_id=owner.id)
         serializer = BookToReadSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['get'],
+            detail=False,
+            url_path='recommendations',
+            permission_classes=[IsAuthenticated])
+    def get_recommendations(self, request):
+        user = request.user
+        queryset = BookRecommendationService.get_recommendations_for_user(
+            user_id=user.id)
+        serializer = BookListSerializer(queryset, many=True)
         return Response(serializer.data)
 
 

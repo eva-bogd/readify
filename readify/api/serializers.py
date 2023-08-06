@@ -70,7 +70,7 @@ class BookListSerializer(serializers.ModelSerializer):
 
 
 class BookReadSerializer(serializers.ModelSerializer):
-    book = serializers.StringRelatedField(read_only=True)
+    book = BookListSerializer(read_only=True)
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -79,7 +79,7 @@ class BookReadSerializer(serializers.ModelSerializer):
 
 
 class BookToReadSerializer(serializers.ModelSerializer):
-    book = serializers.StringRelatedField(read_only=True)
+    book = BookListSerializer(read_only=True)
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:

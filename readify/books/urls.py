@@ -10,6 +10,11 @@ urlpatterns = [
     path('books/', views.books, name='books'),
     # страница с определенной книгой
     path('books/<int:book_id>/', views.books_detail, name='books_detail'),
+    # страница с книгами по жанру
+    path('books/<slug:slug>/', views.books_genre, name='books_genre'),
+    # страница с книгами автора
+    path('books/author/<int:author_id>/', views.book_author, name='author'),
+
     # для добавления отзыва
     path('books/<int:book_id>/add_review>', views.add_review,
          name='add_review'),
@@ -22,10 +27,7 @@ urlpatterns = [
     # для редактирования комментария
     path('books/<int:book_id>/reviews/<int:review_id>/comments/<int:comment_id>/edit_comment',
          views.edit_comment, name='edit_comment'),
-    # страница с книгами по жанру
-    path('books/<slug:slug>/', views.books_genre, name='books_genre'),
-    # страница с книгами автора
-    path('author/<int:author_id>/', views.author, name='author'),
+
 
     # страница с прочитанными книгами
     path('users/<int:user_id>/book_read/', views.book_read, name='book_read'),
@@ -47,7 +49,7 @@ urlpatterns = [
          name='remove_book_to_read'),
 
     # рекомендации
-    path('recommendations', views.recommendations,
+    path('books/recommendations', views.recommendations,
          name='recommendations'),
     # поиск по книгам
     path('search_books/', views.search_books, name='search_books'),
