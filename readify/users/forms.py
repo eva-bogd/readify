@@ -15,8 +15,8 @@ class CreationForm(UserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email',
-                  'birth_date', 'gender', 'avatar')
+        fields = ('first_name', 'last_name', 'email', 'birth_date', 'gender',
+                  'avatar', 'show_book_read', 'show_book_to_read')
 
 
 class PasswordChangingForm(PasswordChangeForm):

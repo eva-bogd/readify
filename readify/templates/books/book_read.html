@@ -11,6 +11,10 @@
       </div>
   </div>
   {% include 'includes/book_list.html' %}
-  {% include 'users/profile_sidebar.html' %}
+
+  {% if user.is_authenticated %}
+    {% include 'users/profile_sidebar.html' %}
+  {% endif %}
+
   {% include 'includes/paginator.html' %}
 {% endblock %}

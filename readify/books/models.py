@@ -72,10 +72,11 @@ class Book(models.Model):
             return rating
 
     class Meta:
+        unique_together = ['name', 'author']
         ordering = ('added_date',)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.author})'
 
 
 class Review(models.Model):

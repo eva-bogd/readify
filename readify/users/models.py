@@ -25,6 +25,12 @@ class User(AbstractUser):
         upload_to='users/',
         blank=True,
         null=True)
+    show_book_read = models.BooleanField(
+        verbose_name='Показывать другим пользователям мои прочитанные книги',
+        default=True)
+    show_book_to_read = models.BooleanField(
+        verbose_name='Показывать другим пользователям мои запланированные книги',
+        default=True)
 
     class Meta:
         ordering = ('id',)

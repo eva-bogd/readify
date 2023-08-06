@@ -1,18 +1,20 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import GenreViewSet, AuthorViewSet, BookViewSet
+from .views import (GenreViewSet, AuthorViewSet, BookViewSet,
+                    UserBookListViewSet)
 
 router_api_v1 = DefaultRouter()
 
 router_api_v1.register('genres', GenreViewSet, basename='genres')
 router_api_v1.register('authors', AuthorViewSet, basename='authors')
 router_api_v1.register('books', BookViewSet, basename='books')
-# router_api_v1.register('reviews', ReviewViewSet, basename='reviews')
-# router_api_v1.register('comments', CommentViewSet, basename='comments')
+router_api_v1.register('users', UserBookListViewSet, basename='users')
+
 
 urlpatterns = [
-    path('', include(router_api_v1.urls)),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('', include(router_api_v1.urls)),
+    # path('users/<int:pk>/book_read/', CustomUserViewSet.as_view({'get': 'get_book_read'}), name='user-book-read')
 ]

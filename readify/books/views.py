@@ -167,9 +167,12 @@ def edit_comment(request, book_id, review_id, comment_id):
 
 
 # Прочитанные книги
-@login_required
-def book_read(request):
-    book_list = Book.objects.filter(books_read__user=request.user)
+def book_read(request, user_id):
+    user = request.user
+    owner = get_object_or_404(User, id=user_id)
+    if user.id != owner.id and owner.show_book_read is False:
+        return HttpResponse("Список прочитанных книг недоступен", status=403)
+    book_list = Book.objects.filter(books_read__user_id=user_id)
     context = {
         'page_obj': get_paginator(request, book_list)
     }
@@ -194,9 +197,12 @@ def remove_book_read(request, book_id):
 
 
 # Запланированные книги
-@login_required
-def book_to_read(request):
-    book_list = Book.objects.filter(books_to_read__user=request.user)
+def book_to_read(request, user_id):
+    user = request.user
+    owner = get_object_or_404(User, id=user_id)
+    if user.id != owner.id and owner.show_book_to_read is False:
+        return HttpResponse("Список прочитанных книг недоступен", status=403)
+    book_list = Book.objects.filter(books_to_read__user_id=user_id)
     context = {
          'page_obj': get_paginator(request, book_list)
     }

@@ -4,7 +4,7 @@ from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'year', 'rating_display')  # рейтинг добавить
+    list_display = ('name', 'author', 'year', 'rating_display')
     list_editable = ('author', 'year',)
     filter_horizontal = ('genre',)
     # ordering = ('-rating')

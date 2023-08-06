@@ -28,7 +28,7 @@ urlpatterns = [
     path('author/<int:author_id>/', views.author, name='author'),
 
     # страница с прочитанными книгами
-    path('book_read', views.book_read, name='book_read'),
+    path('users/<int:user_id>/book_read/', views.book_read, name='book_read'),
     # добавить книгу в прочитанные
     path('books/<int:book_id>/add_book_read/', views.add_book_read,
          name='add_book_read'),
@@ -37,7 +37,7 @@ urlpatterns = [
          name='remove_book_read'),
 
     # страница со списком запланированных книг
-    path('book_to_read', views.book_to_read,
+    path('users/<int:user_id>/book_to_read/', views.book_to_read,
          name='book_to_read'),
     # добавить книгу в запланированные
     path('books/<int:book_id>/add_book_to_read/', views.add_book_to_read,

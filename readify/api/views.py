@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import filters, status
 from rest_framework.response import Response
@@ -20,6 +20,32 @@ class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
 
 
+class UserBookListViewSet(viewsets.ViewSet):
+    lookup_field = 'user_id'
+
+    @action(methods=['get'], detail=True, url_path='book_read')
+    def get_book_read(self, request, user_id):
+        user = request.user
+        owner = get_object_or_404(User, id=user_id)
+        if user.id != owner.id and owner.show_book_read is False:
+            return Response("Список прочитанных книг недоступен",
+                            status=status.HTTP_403_FORBIDDEN)
+        queryset = BookRead.objects.filter(user_id=owner.id)
+        serializer = BookReadSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=True, url_path='book_to_read')
+    def get_book_to_read(self, request, user_id):
+        user = request.user
+        owner = get_object_or_404(User, id=user_id)
+        if user.id != owner.id and owner.show_book_to_read is False:
+            return Response("Список запланированных книг недоступен",
+                            status=status.HTTP_403_FORBIDDEN)
+        queryset = BookToRead.objects.filter(user_id=owner.id)
+        serializer = BookToReadSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
@@ -27,6 +53,7 @@ class GenreViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'slug')
+    lookup_field = 'slug'
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -57,19 +84,20 @@ class BookViewSet(viewsets.ModelViewSet):
     def add_or_delete_in_book_read(self, request, pk=None):
         book = self.get_object()
         user = request.user
+        book_read = BookRead.objects.filter(book=book, user=user)
         if request.method == 'POST':
-            if BookRead.objects.filter(book=book, user=user).exists():
+            if book_read.exists():
                 return Response("Книга уже есть в списке прочитанных",
                                 status=status.HTTP_400_BAD_REQUEST)
-            book_read = BookRead.objects.create(book=book, user=user)
-            BookReadSerializer(book_read)
+            new_book_read = BookRead.objects.create(book=book, user=user)
+            BookReadSerializer(new_book_read)
             return Response("Книга добавлена в список прочитанных",
                             status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
-            if not BookRead.objects.filter(book=book, user=user).exists():
+            if not book_read.exists():
                 return Response("Книга отсутствует в списке прочитанных",
                                 status=status.HTTP_404_NOT_FOUND)
-            BookRead.objects.filter(book=book, user=user).delete()
+            book_read.delete()
             return Response("Книга удалена из списка прочитанных",
                             status=status.HTTP_204_NO_CONTENT)
 
@@ -80,18 +108,19 @@ class BookViewSet(viewsets.ModelViewSet):
     def add_or_delete_in_book_to_read(self, request, pk=None):
         book = self.get_object()
         user = request.user
+        book_to_read = BookToRead.objects.filter(book=book, user=user)
         if request.method == 'POST':
-            if BookToRead.objects.filter(book=book, user=user).exists():
+            if book_to_read.exists():
                 return Response("Книга уже есть в списке запланированных",
                                 status=status.HTTP_400_BAD_REQUEST)
-            book_to_read = BookToRead.objects.create(book=book, user=user)
-            BookToReadSerializer(book_to_read)
+            new_book_to_read = BookToRead.objects.create(book=book, user=user)
+            BookToReadSerializer(new_book_to_read)
             return Response("Книга добавлена в список запланированных",
                             status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
-            if not BookToRead.objects.filter(book=book, user=user).exists():
+            if not book_to_read.exists():
                 return Response("Книга отсутствует в списке запланированных",
                                 status=status.HTTP_404_NOT_FOUND)
-            BookToRead.objects.filter(book=book, user=user).delete()
+            book_to_read.delete()
             return Response("Книга удалена из списка запланированных",
                             status=status.HTTP_204_NO_CONTENT)

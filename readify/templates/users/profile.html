@@ -11,11 +11,13 @@
     {% else %}
       <p>Аватар отсутствует</p>
     {% endif %}
-    <p>Имя: {{ user.first_name }}</p>
-    <p>Фамилия: {{ user.last_name }}</p>
-    <p>Электронная почта: {{ user.email }}</p>
-    <p>Дата рождения: {{ user.birth_date }}</p>
-    <p>Пол: {{ user.get_gender_display }}</p>
+    <ul>
+      <li>Имя: {{ user.first_name }}</li>
+      <li>Фамилия: {{ user.last_name }}</li>
+      <li>Электронная почта: {{ user.email }}</li>
+      <li>Дата рождения: {{ user.birth_date }}</li>
+      <li>Пол: {{ user.get_gender_display }}</li>
+    </ul>
   </div>
 
   {% if user == request.user%}
@@ -29,6 +31,13 @@
 
     {% include 'users/profile_sidebar.html' %}
 
+  {% endif %}
+
+  {% if user != request.user and user.show_book_read %}
+    <p><a href="{% url 'books:book_read' user.id %}">Посмотреть список прочитанных книг {{ user.username }}</a></p>
+  {% endif %}
+  {% if user != request.user and user.show_book_to_read %}
+    <p><a href="{% url 'books:book_to_read' user.id %}">Посмотреть список запланированных книг {{user.username}}</a></p>
   {% endif %}
 
 {% endblock %}

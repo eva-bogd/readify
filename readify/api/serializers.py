@@ -70,12 +70,18 @@ class BookListSerializer(serializers.ModelSerializer):
 
 
 class BookReadSerializer(serializers.ModelSerializer):
+    book = serializers.StringRelatedField(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = BookRead
         fields = ('id', 'book', 'user', 'added_date')
 
 
 class BookToReadSerializer(serializers.ModelSerializer):
+    book = serializers.StringRelatedField(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = BookToRead
         fields = ('id', 'book', 'user', 'added_date')
