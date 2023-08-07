@@ -114,7 +114,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    review = serializers.StringRelatedField(read_only=True)
+    review = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
     author = serializers.StringRelatedField(read_only=True)
 
     def validate(self, attrs):
@@ -127,4 +127,5 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'review', 'author', 'text', 'added_date', 'edited_date')
+        fields = ('id', 'review', 'author', 'text',
+                  'added_date', 'edited_date')
