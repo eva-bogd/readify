@@ -113,7 +113,7 @@ class Review(models.Model):
         ordering = ('-added_date',)
 
     def __str__(self):
-        return f'{self.book} ({self.score})'
+        return f'{self.author}: {self.score}'
 
 
 class Comment(models.Model):

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
@@ -85,3 +86,45 @@ class BookToReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookToRead
         fields = ('id', 'book', 'user', 'added_date')
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    book = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
+
+    def validate(self, attrs):
+        if self.context['request'].method == "POST":
+            author = self.context['request'].user
+            book = get_object_or_404(
+                Book,
+                id=self.context['view'].kwargs.get('book_id')
+            )
+            if Review.objects.filter(
+                book_id=book.id,
+                author_id=author.id
+            ).exists():
+                raise serializers.ValidationError(
+                    "Вы уже оставили отзыв на эту книгу.")
+        return attrs
+
+    class Meta:
+        model = Review
+        fields = ('id', 'book', 'author', 'text', 'score',
+                  'added_date', 'edited_date')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    review = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
+
+    def validate(self, attrs):
+        get_object_or_404(
+            Review,
+            book_id=self.context['view'].kwargs.get('book_id'),
+            id=self.context['view'].kwargs.get('review_id')
+        )
+        return attrs
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'review', 'author', 'text', 'added_date', 'edited_date')
