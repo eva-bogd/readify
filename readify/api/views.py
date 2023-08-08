@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import filters, status
+from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
@@ -15,6 +15,7 @@ from .serializers import (CustomUserSerializer, GenreSerializer,
                           BookReadSerializer, BookToReadSerializer,
                           ReviewSerializer, CommentSerializer)
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .filters import BookFilter
 
 
 class CustomUserViewSet(UserViewSet):
@@ -82,8 +83,9 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     # все действия кроме чтения только админ
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend,)
     search_fields = ('name',)
+    filterset_class = BookFilter
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -167,7 +169,5 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Comment.objects.filter(review_id=review_id)
 
     def perform_create(self, serializer):
-        # book_id = self.kwargs.get('book_id')
         review_id = self.kwargs.get('review_id')
         serializer.save(review_id=review_id, author=self.request.user)
-        # serializer.save(book_id=book_id, review_id=review_id, author=self.request.user)
