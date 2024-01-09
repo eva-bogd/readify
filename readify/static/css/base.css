@@ -1,0 +1,66 @@
+.img-resize {
+  width: auto; /* Ширина изображения */
+  height: 500px; /* Высота изображения */
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Создание трех столбцов равной ширины */
+  grid-gap: 20px; /* Отступы между элементами */
+}
+
+.book-cover-list {
+  width: auto; /* Ширина изображения */
+  height: 350px; /* Высота изображения */
+}
+
+.book-cover {
+    width: auto; /* Ширина изображения */
+    height: 500px; /* Высота изображения */
+  }
+
+.book-details {
+    margin-bottom: 20px; /* Добавляем отступ снизу для разделения соседних элементов */
+  }
+
+.book-item {
+    margin-bottom: 10px; /* Добавляем отступ снизу между элементами */
+  }
+
+.avatar-image {
+    border-radius: 50%; /* Кружок */
+    width: auto; /* Ширина аватара */
+    height: 100px; /* Высота аватара */
+    object-fit: cover; /* Тип масштабирования */
+    border: 2px solid #000; /* Задать толщину и цвет рамки */
+  }
+
+.profile_sidebar {
+    position: fixed; /* Зафиксировать позицию */
+    top: 0;
+    right: 0; /* Разместить меню справа */
+    width: 300px; /* Ширина меню */
+    height: 100%; /* Высота меню */
+    background-color: #E6E6FA; /* Цвет фона меню */
+    padding: 20px; /* Отступы внутри меню */
+    box-sizing: border-box; /* Учесть отступы внутри размеров */
+  }
+
+.profile_sidebar ul {
+    list-style-type: none; /* Убрать маркеры списка */
+    padding: 0;
+    margin: 0;
+  }
+
+.profile_sidebar ul li {
+    margin-bottom: 10px; /* Отступ между пунктами меню */
+  }
+
+.profile_sidebar ul li a {
+    text-decoration: none; /* Убрать подчеркивание для ссылок */
+    color: #333333; /* Цвет текста ссылок */
+  }
+
+.profile_sidebar ul li a:hover {
+    color: #000000; /* Цвет текста ссылок при наведении */
+  }
