@@ -13,25 +13,23 @@ from django.contrib.auth.views import (LoginView, LogoutView,
 app_name = 'users'
 
 urlpatterns = [
-    # страница профиля пользователя
     path('profile/<str:username>', views.profile, name='profile'),
-    # для редактирования профиля
     path('profile/<str:username>/update', views.update_profile,
          name='update_profile'),
-    # страница регистрации
+
     path('signup/', views.SignUp.as_view(), name='signup'),
-    # страница входа
+
     path(
         'login/',
         LoginView.as_view(template_name='users/login.html'),
         name='login'
     ),
-    # cтраница выхода
     path(
         'logout/',
         LogoutView.as_view(template_name='users/logged_out.html'),
         name='logout'
     ),
+
     # страница смены пароля
     path(
         'password_change/',

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Q, Avg
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
@@ -94,10 +94,6 @@ def add_review(request, book_id):
         'review_form': review_form,
         'reviews': reviews,
     }
-    # else:
-    #     messages.error(request, "Неверный формат отзыва.")
-    #     review_form.add_error(None, "Ошибка добавления отзыва")
-    # return redirect('books:books_detail', book_id=book_id)
     return render(request, 'books/books_detail.html', context)
 
 
@@ -105,7 +101,7 @@ def add_review(request, book_id):
 def edit_review(request, book_id, review_id):
     review = get_object_or_404(
         Review,
-        id=review_id,  # author=request.user)
+        id=review_id,
         book_id=book_id)
     if request.user != review.author:
         return redirect('books:books_detail', book_id=book_id)
@@ -150,7 +146,7 @@ def edit_comment(request, book_id, review_id, comment_id):
         book_id=book_id)
     comment = get_object_or_404(
         Comment,
-        id=comment_id,  # author=request.user)
+        id=comment_id,
         review=review)
     if request.user != comment.author:
         return redirect('books:books_detail', book_id=book_id)
@@ -167,7 +163,6 @@ def edit_comment(request, book_id, review_id, comment_id):
     return render(request, 'books/edit_comment.html', context)
 
 
-# Прочитанные книги
 def book_read(request, user_id):
     user = request.user
     owner = get_object_or_404(User, id=user_id)
@@ -197,7 +192,6 @@ def remove_book_read(request, book_id):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-# Запланированные книги
 def book_to_read(request, user_id):
     user = request.user
     owner = get_object_or_404(User, id=user_id)
@@ -226,6 +220,7 @@ def remove_book_to_read(request, book_id):
     get_object_or_404(BookToRead, user=user, book=book).delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required
 def recommendations(request):
     user = request.user
@@ -241,7 +236,7 @@ def search_books(request):
     # '' - пустая строка дефолтое значение
     search_query = request.GET.get('search', '')
     book_list = []
-    if search_query: # если пустое значение возвращается false
+    if search_query:
         keywords = search_query.split()
         query = Q()
         for keyword in keywords:
@@ -252,12 +247,6 @@ def search_books(request):
                       Q(description__icontains=keyword)
                 )
         book_list = Book.objects.filter(query).distinct()
-        # book_list = Book.objects.filter(
-        #     Q(name__icontains=search_query) |
-        #     Q(author__name__icontains=search_query) |
-        #     Q(genre__name__icontains=search_query) |
-        #     Q(description__icontains=search_query)
-        # )
     search_form = SearchForm(request.GET or None)
     context = {
         'book_list': book_list,

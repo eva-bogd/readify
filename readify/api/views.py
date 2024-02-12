@@ -63,7 +63,6 @@ class UserBookListViewSet(viewsets.ViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
-    # все действия кроме чтения только админ
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'slug')
@@ -73,7 +72,6 @@ class GenreViewSet(viewsets.ModelViewSet):
 class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
-    # все действия кроме чтения только админ
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
@@ -81,7 +79,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    # все действия кроме чтения только админ
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = (filters.SearchFilter, DjangoFilterBackend,)
     search_fields = ('name',)

@@ -27,7 +27,7 @@
       {% endfor %}
     </ul>
   {% endif %}
-  {% comment %} {% else %} {% endcomment %}
+
   {% if book_list|length == 0 and request.GET.query %}
     <p>Ничего не найдено.</p>
   {% endif %}

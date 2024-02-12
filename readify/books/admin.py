@@ -6,8 +6,7 @@ from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
 class BookAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'year', 'rating_display')
     list_editable = ('author', 'year',)
-    filter_horizontal = ('genre',)
-    # ordering = ('-rating')
+    filter_horizontal = ('genre',)  # for ManyToManyField
     list_per_page = 10
     search_fields = ('name', 'author',)
     list_filter = ('name', 'author', 'genre', 'added_date',)

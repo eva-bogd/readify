@@ -41,8 +41,6 @@ class Book(models.Model):
         verbose_name='Жанр',
         blank=True,
         related_name='books')
-        # книги останутся в БД при удалении жанра:
-        # on_delete=models.SET_NULL,
     year = models.SmallIntegerField(
         verbose_name='Год издания',
         validators=[
@@ -83,14 +81,12 @@ class Review(models.Model):
     book = models.ForeignKey(
         Book,
         verbose_name='Книга',
-        # отзыв удалится при удалении книги:
         on_delete=models.CASCADE,
         related_name='reviews')
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
         null=True,
-        # отзыв останется в БД при удалении автора:
         on_delete=models.SET_NULL,
         related_name='reviews')
     text = models.TextField(
@@ -186,26 +182,3 @@ class BookToRead(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.book.name}'
-
-
-# class Recommendation(models.Model):
-#     book = models.ForeignKey(
-#         Book,
-#         verbose='Книга',
-#         on_delete=models.CASCADE,
-#         related_name='recommendations')
-#     user = models.ForeignKey(
-#         User,
-#         verbose_name='Пользователь',
-#         on_delete=models.CASCADE,
-#         related_name='recommendations')
-#     added_date = models.DateTimeField(
-#         verbose_name='Дата добавления',
-#         auto_now_add=True)
-
-#     class Meta:
-#         unique_together = ['user', 'book']
-#         ordering = ('added_date',)
-
-#     def __str__(self):
-#         return f'{self.user.username} - {self.book.name}'

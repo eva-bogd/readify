@@ -20,7 +20,7 @@
       </div>
 
       <br>
-      <!-- Кнопки для добавления/удаления из прочитанных и запланированных -->
+      <!-- Buttons to add/remove from read and planned -->
       {% if request.user.is_authenticated %}
         {% if book|is_book_read_by_user:request.user %}
           <form method="POST" action="{% url 'books:remove_book_read' book_id=book.id %}">
@@ -74,7 +74,7 @@
           <b>Год выпуска:</b> {{ book.year }}
         </div>
 
-        <!-- Рейтинг -->
+        <!-- Rating -->
         <div class="book-item">
           <b>Рейтинг: {{ book.rating }}</b>
         </div>
@@ -86,7 +86,6 @@
           <h3>Отзывы:</h3>
           {% for review in reviews %}
             <p>
-              <!--<span style="color: red;">{{ review.author.username }}:</span>-->
               {% if review.author.avatar %}
                 <img src="{{ review.author.avatar.url }}" class="avatar-image">
               {% endif %}

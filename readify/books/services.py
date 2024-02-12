@@ -14,7 +14,6 @@ class BookRecommendationService:
             id__in=books_read).values_list('author', flat=True).distinct()
         books = Book.objects.exclude(
             id__in=books_read).exclude(id__in=books_to_read)
-        # books_with_rating = Book.objects.annotate(rating=Avg('reviews__score')).filter(rating__gte=6)
         genre_recommendations = books.filter(genre__in=genres)
         author_recommendations = books.filter(author__in=authors)
         recommendations = genre_recommendations & author_recommendations

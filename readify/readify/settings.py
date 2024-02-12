@@ -148,7 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # django-crispy-forms
 # https://django-crispy-forms.readthedocs.io/en/latest/install.html
 
-# CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
@@ -156,7 +155,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'books:home'
-# LOGOUT_REDIRECT_URL = 'books:home'
 
 
 # Auth customization
@@ -208,21 +206,12 @@ SIMPLE_JWT = {
 }
 
 
-# E-mail
+# E-mail for feedback
 
-# #  подключаем движок filebased.EmailBackend
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# # указываем директорию, в которую будут складываться файлы писем
-# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-
-# Settings SMTP
-# DEFAULT_FROM_EMAIL = ''
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-# EMAIL_HOST_USER = 'eva.postss@gmail.com'
-# EMAIL_HOST_PASSWORD = 'hexjcaghyljoahso'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
