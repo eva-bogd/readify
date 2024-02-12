@@ -1,21 +1,22 @@
-from django.shortcuts import render, get_object_or_404
+from books.models import (Author, Book, BookRead, BookToRead, Comment, Genre,
+                          Review)
+from books.services import BookRecommendationService
+from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import viewsets, filters, status
-from rest_framework.response import Response
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 from users.models import User
-from books.models import (Genre, Author, Book, Review, Comment,
-                          BookRead, BookToRead)
-from books.services import BookRecommendationService
-from .serializers import (CustomUserSerializer, GenreSerializer,
-                          AuthorSerializer, BookSerializer, BookListSerializer,
-                          BookReadSerializer, BookToReadSerializer,
-                          ReviewSerializer, CommentSerializer)
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+
 from .filters import BookFilter
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .serializers import (AuthorSerializer, BookListSerializer,
+                          BookReadSerializer, BookSerializer,
+                          BookToReadSerializer, CommentSerializer,
+                          CustomUserSerializer, GenreSerializer,
+                          ReviewSerializer)
 
 
 class CustomUserViewSet(UserViewSet):

@@ -1,11 +1,10 @@
+from books.models import (Author, Book, BookRead, BookToRead, Comment, Genre,
+                          Review)
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserSerializer, UserCreateSerializer
-from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-
+from rest_framework import serializers
 from users.models import User
-from books.models import (Genre, Author, Book, Review, Comment,
-                          BookRead, BookToRead)
 
 
 class CustomUserSerializer(UserSerializer):

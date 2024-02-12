@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Genre, Author, Book, Review, Comment, BookRead, BookToRead
+from .models import Author, Book, BookRead, BookToRead, Comment, Genre, Review
 
 
 class BookAdmin(admin.ModelAdmin):

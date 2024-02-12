@@ -1,5 +1,5 @@
-from django_filters import rest_framework as filters
 from books.models import Book, Genre
+from django_filters import rest_framework as filters
 
 
 class BookFilter(filters.FilterSet):
