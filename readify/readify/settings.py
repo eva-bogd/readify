@@ -18,7 +18,10 @@ SECRET_KEY = '(l&)a158@d=meimxfmu=__nh4p3#zc8$#*k$d4##fk#p)4d2@('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'www.finny.pythonanywhere.com',
+    'finny.pythonanywhere.com',
+]
 
 
 # Application definition
